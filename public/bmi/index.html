@@ -34,53 +34,76 @@ input[type="number"]::placeholder{color:#b5b3ae}
 .calc-btn{width:100%;padding:16px;background:#1D9E75;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:background .2s;margin-top:4px}
 .calc-btn:hover{background:#178a66}
 .calc-btn:disabled{background:#c4c2bd;cursor:not-allowed}
+
+/* Results */
 .result-area{display:none;margin-top:28px;animation:fadeIn .4s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .bmi-display{text-align:center;margin-bottom:24px}
 .bmi-number{font-size:56px;font-weight:800;line-height:1}
 .bmi-category{font-size:16px;font-weight:600;margin-top:8px}
 .bmi-formula{font-size:12px;color:#9a9a9a;margin-top:6px}
+
+/* Gauge */
 .gauge-container{position:relative;height:24px;border-radius:12px;overflow:hidden;background:linear-gradient(90deg,#3b82f6 0%,#22c55e 25%,#22c55e 40%,#eab308 55%,#f97316 75%,#ef4444 100%);margin-bottom:8px}
 .gauge-marker{position:absolute;top:-4px;width:4px;height:32px;background:#1a1a1a;border-radius:2px;transition:left .6s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 6px rgba(0,0,0,0.3)}
 .gauge-labels{display:flex;justify-content:space-between;font-size:11px;color:#9a9a9a;margin-bottom:20px}
+
+/* Info cards */
 .info-cards{display:flex;flex-direction:column;gap:12px}
 .info-card{padding:14px 16px;border-radius:12px;border:1px solid #e8e6e1;background:#fafaf8}
 .info-card-title{font-size:12px;font-weight:600;color:#6b6b6b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
 .info-card-value{font-size:15px;font-weight:600;color:#1a1a1a}
 .info-card-desc{font-size:13px;color:#6b6b6b;margin-top:4px;line-height:1.4}
+
+/* Turkey comparison */
 .turkey-compare{padding:16px;border-radius:12px;background:linear-gradient(135deg,#E1F5EE,#d4f5e9);border:1px solid #b8e8d4;margin-top:12px}
 .turkey-compare .flag{font-size:18px;margin-right:6px}
 .turkey-compare .title{font-size:13px;font-weight:600;color:#0F6E56;margin-bottom:8px}
 .turkey-bar{height:8px;border-radius:4px;background:#b8e8d4;overflow:hidden;margin-bottom:4px}
 .turkey-bar-fill{height:100%;border-radius:4px;background:#1D9E75;transition:width .8s ease}
 .turkey-compare .stat{font-size:12px;color:#0F6E56}
+
+/* Share */
 .share-row{display:flex;gap:8px;margin-top:16px}
 .share-btn{flex:1;padding:10px;border:1px solid #e8e6e1;border-radius:10px;background:white;font-size:13px;font-weight:500;cursor:pointer;text-align:center;transition:all .2s;color:#6b6b6b}
 .share-btn:hover{border-color:#1D9E75;color:#1D9E75}
 .reset-btn{width:100%;padding:12px;border:none;background:none;font-size:14px;font-weight:500;color:#1D9E75;cursor:pointer;margin-top:12px}
 .reset-btn:hover{text-decoration:underline}
+
+/* Branding */
 .branding{text-align:center;margin-top:20px;font-size:12px;color:#9a9a9a}
 .branding a{color:#1D9E75;text-decoration:none;font-weight:500}
+
+/* Embed mode */
 body.embed{background:transparent;padding:0}
 body.embed .branding{display:none}
-@media(max-width:480px){body{padding:16px}.tool-card{padding:24px 20px;border-radius:16px}.bmi-number{font-size:44px}.input-row{flex-direction:column;gap:0}}
+
+@media(max-width:480px){
+  body{padding:16px}
+  .tool-card{padding:24px 20px;border-radius:16px}
+  .bmi-number{font-size:44px}
+  .input-row{flex-direction:column;gap:0}
+}
 </style>
 </head>
 <body>
 <div class="tool-card">
   <div class="tool-header">
-    <div class="tool-icon">\u{1F9ED}</div>
+    <div class="tool-icon">🧭</div>
     <h1>BMI Hesaplayıcı</h1>
     <p>Vücut kitle indeksini hesapla,<br>Türkiye ortalamasıyla karşılaştır</p>
   </div>
+
   <div class="gender-select">
-    <button class="gender-btn active" onclick="setGender('male',this)">\u{1F468} Erkek</button>
-    <button class="gender-btn" onclick="setGender('female',this)">\u{1F469} Kadın</button>
+    <button class="gender-btn active" onclick="setGender('male',this)">👨 Erkek</button>
+    <button class="gender-btn" onclick="setGender('female',this)">👩 Kadın</button>
   </div>
+
   <div class="form-group">
     <label>Yaş</label>
     <input type="number" id="age" placeholder="25" min="2" max="120">
   </div>
+
   <div class="input-row">
     <div class="form-group">
       <label>Boy <span class="sublabel">(cm)</span></label>
@@ -91,69 +114,89 @@ body.embed .branding{display:none}
       <input type="number" id="weight" placeholder="70" min="10" max="300">
     </div>
   </div>
+
   <button class="calc-btn" onclick="calculate()">Hesapla</button>
+
   <div class="result-area" id="resultArea">
     <div class="bmi-display">
       <div class="bmi-number" id="bmiNumber">--</div>
       <div class="bmi-category" id="bmiCategory">--</div>
       <div class="bmi-formula" id="bmiFormula"></div>
     </div>
+
     <div class="gauge-container">
       <div class="gauge-marker" id="gaugeMarker" style="left:0%"></div>
     </div>
     <div class="gauge-labels">
       <span>Zayıf</span><span>Normal</span><span>Kilolu</span><span>Obez</span>
     </div>
+
     <div class="info-cards">
       <div class="info-card" id="idealWeightCard">
         <div class="info-card-title">İdeal Kilo Aralığın</div>
         <div class="info-card-value" id="idealWeight">--</div>
         <div class="info-card-desc" id="idealWeightDesc"></div>
       </div>
+
       <div class="info-card" id="healthCard">
         <div class="info-card-title">Sağlık Notu</div>
         <div class="info-card-desc" id="healthNote">--</div>
       </div>
+
       <div class="turkey-compare">
-        <div class="title"><span class="flag">\u{1F1F9}\u{1F1F7}</span> Türkiye Karşılaştırması</div>
+        <div class="title"><span class="flag">🇹🇷</span> Türkiye Karşılaştırması</div>
         <div class="turkey-bar"><div class="turkey-bar-fill" id="turkeyBar" style="width:0%"></div></div>
         <div class="stat" id="turkeyStat">--</div>
       </div>
     </div>
+
     <div class="share-row">
-      <button class="share-btn" onclick="shareResult()">\u{1F4CB} Kopyala</button>
-      <button class="share-btn" onclick="shareWhatsApp()">\u{1F4AC} WhatsApp</button>
-      <button class="share-btn" onclick="shareTwitter()">\u{1F426} Twitter</button>
+      <button class="share-btn" onclick="shareResult()">📋 Kopyala</button>
+      <button class="share-btn" onclick="shareWhatsApp()">💬 WhatsApp</button>
+      <button class="share-btn" onclick="shareTwitter()">🐦 Twitter</button>
     </div>
-    <button class="reset-btn" onclick="resetForm()">\u{21BB} Yeniden Hesapla</button>
+
+    <button class="reset-btn" onclick="resetForm()">↻ Yeniden Hesapla</button>
   </div>
 </div>
+
 <div class="branding">
   <a href="https://iyibirhayat.com/beden/bmi-nedir/">iyibirhayat.com</a> · Bilimsel temelli araçlar
 </div>
+
 <script>
 let gender = 'male';
+
+// Check embed mode
 if(new URLSearchParams(window.location.search).get('embed') === '1') {
   document.body.classList.add('embed');
 }
+
 function setGender(g, btn) {
   gender = g;
   document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
+
 function calculate() {
   const age = parseInt(document.getElementById('age').value);
   const height = parseFloat(document.getElementById('height').value);
   const weight = parseFloat(document.getElementById('weight').value);
+
   if(!age || !height || !weight || age < 2 || height < 50 || weight < 10) {
     alert('Lütfen tüm alanları doğru doldur.');
     return;
   }
+
   const heightM = height / 100;
   const bmi = weight / (heightM * heightM);
   const bmiRound = Math.round(bmi * 10) / 10;
+
+  // Display
   document.getElementById('bmiNumber').textContent = bmiRound;
   document.getElementById('bmiFormula').textContent = weight + ' kg ÷ (' + height + ' cm)² = ' + bmiRound;
+
+  // Category & Color
   let cat, color, gaugePos;
   if(bmi < 18.5) { cat = 'Zayıf'; color = '#3b82f6'; gaugePos = (bmi / 18.5) * 25; }
   else if(bmi < 25) { cat = 'Normal Kilolu'; color = '#22c55e'; gaugePos = 25 + ((bmi - 18.5) / 6.5) * 20; }
@@ -161,14 +204,19 @@ function calculate() {
   else if(bmi < 35) { cat = 'Obez (Sınıf I)'; color = '#f97316'; gaugePos = 65 + ((bmi - 30) / 5) * 15; }
   else if(bmi < 40) { cat = 'Obez (Sınıf II)'; color = '#ef4444'; gaugePos = 80 + ((bmi - 35) / 5) * 10; }
   else { cat = 'Morbid Obez'; color = '#dc2626'; gaugePos = 95; }
+
   gaugePos = Math.min(Math.max(gaugePos, 2), 98);
+
   document.getElementById('bmiCategory').textContent = cat;
   document.getElementById('bmiCategory').style.color = color;
   document.getElementById('bmiNumber').style.color = color;
   document.getElementById('gaugeMarker').style.left = gaugePos + '%';
+
+  // Ideal weight (BMI 18.5-24.9)
   const idealMin = Math.round(18.5 * heightM * heightM);
   const idealMax = Math.round(24.9 * heightM * heightM);
   document.getElementById('idealWeight').textContent = idealMin + ' – ' + idealMax + ' kg';
+
   const diff = weight - idealMax;
   if(diff > 0) {
     document.getElementById('idealWeightDesc').textContent = 'İdeal aralığa ulaşmak için yaklaşık ' + Math.round(diff) + ' kg vermeniz önerilir.';
@@ -177,6 +225,8 @@ function calculate() {
   } else {
     document.getElementById('idealWeightDesc').textContent = 'Tebrikler! İdeal kilo aralığındasınız.';
   }
+
+  // Health note based on category
   const notes = {
     'Zayıf': 'Düşük BMI, yetersiz beslenme veya sağlık sorunlarına işaret edebilir. Dengeli bir beslenme programı için bir diyetisyene danışmanız faydalı olabilir.',
     'Normal Kilolu': 'BMI değeriniz sağlıklı aralıkta. Dengeli beslenme ve düzenli egzersiz ile bu seviyeyi korumaya devam edin.',
@@ -186,10 +236,14 @@ function calculate() {
     'Morbid Obez': 'Morbid obezite, acil tıbbi müdahale gerektirebilir. Lütfen en kısa sürede bir sağlık kuruluşuna başvurun.'
   };
   document.getElementById('healthNote').textContent = notes[cat] || '';
+
+  // Turkey comparison (WHO/TUIK data approximation)
+  // Average BMI in Turkey: Men ~27.2, Women ~28.4 (overweight range)
   const avgBMI = gender === 'male' ? 27.2 : 28.4;
   const pct = Math.round((bmi / avgBMI) * 100);
   const turkeyPct = Math.min(pct, 150);
   document.getElementById('turkeyBar').style.width = Math.min(turkeyPct, 100) + '%';
+
   if(bmi < avgBMI) {
     const diffPct = Math.round(((avgBMI - bmi) / avgBMI) * 100);
     document.getElementById('turkeyStat').textContent = 'Türkiye ' + (gender === 'male' ? 'erkek' : 'kadın') + ' ortalamasının (BMI ' + avgBMI + ') %' + diffPct + ' altındasınız.';
@@ -197,9 +251,12 @@ function calculate() {
     const diffPct = Math.round(((bmi - avgBMI) / avgBMI) * 100);
     document.getElementById('turkeyStat').textContent = 'Türkiye ' + (gender === 'male' ? 'erkek' : 'kadın') + ' ortalamasının (BMI ' + avgBMI + ') %' + diffPct + ' üstündesiniz.';
   }
+
+  // Show results
   document.getElementById('resultArea').style.display = 'block';
   document.getElementById('resultArea').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
+
 function resetForm() {
   document.getElementById('age').value = '';
   document.getElementById('height').value = '';
@@ -207,24 +264,31 @@ function resetForm() {
   document.getElementById('resultArea').style.display = 'none';
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
+
 function getShareText() {
   const bmi = document.getElementById('bmiNumber').textContent;
   const cat = document.getElementById('bmiCategory').textContent;
-  return '\u{1F9ED} BMI Sonucum: ' + bmi + ' (' + cat + ')\nSen de hesapla → iyibirhayat.com/beden/bmi-nedir/';
+  return '🧭 BMI Sonucum: ' + bmi + ' (' + cat + ')\nSen de hesapla → iyibirhayat.com/beden/bmi-nedir/';
 }
+
 function shareResult() {
-  navigator.clipboard.writeText(getShareText()).then(function() {
+  const text = getShareText();
+  navigator.clipboard.writeText(text).then(function() {
     var btn = event.target;
-    btn.textContent = '\u2705 Kopyalandı!';
-    setTimeout(function() { btn.textContent = '\u{1F4CB} Kopyala'; }, 2000);
+    btn.textContent = '✅ Kopyalandı!';
+    setTimeout(function() { btn.textContent = '📋 Kopyala'; }, 2000);
   });
 }
+
 function shareWhatsApp() {
   window.open('https://wa.me/?text=' + encodeURIComponent(getShareText()), '_blank');
 }
+
 function shareTwitter() {
   window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(getShareText()), '_blank');
 }
+
+// Enter key support
 document.querySelectorAll('input').forEach(function(input) {
   input.addEventListener('keypress', function(e) {
     if(e.key === 'Enter') calculate();
