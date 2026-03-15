@@ -1,7 +1,15 @@
 {
   "rewrites": [
     { "source": "/bmi", "destination": "/bmi/index.html" },
-    { "source": "/bmi/", "destination": "/bmi/index.html" }
+    { "source": "/bmi/", "destination": "/bmi/index.html" },
+    { "source": "/stres-testi", "destination": "/stres-testi/index.html" },
+    { "source": "/stres-testi/", "destination": "/stres-testi/index.html" },
+    { "source": "/uyku", "destination": "/uyku/index.html" },
+    { "source": "/uyku/", "destination": "/uyku/index.html" },
+    { "source": "/pomodoro", "destination": "/pomodoro/index.html" },
+    { "source": "/pomodoro/", "destination": "/pomodoro/index.html" },
+    { "source": "/kisilik", "destination": "/kisilik/index.html" },
+    { "source": "/kisilik/", "destination": "/kisilik/index.html" }
   ],
   "headers": [
     {

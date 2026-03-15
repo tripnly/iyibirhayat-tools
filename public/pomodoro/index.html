@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Zamanlayıcı - iyibirhayat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f7f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        body.embed {
+            background: transparent;
+            min-height: auto;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 460px;
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e8e6e1;
+        }
+
+        .embed .container {
+            box-shadow: none;
+            border: none;
+            padding: 24px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            background-color: #E1F5EE;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #6b6b6b;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            background: #fafaf8;
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1.5px solid transparent;
+            border-radius: 12px;
+            background: transparent;
+            color: #6b6b6b;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: white;
+            border-color: #e8e6e1;
+            color: #1a1a1a;
+        }
+
+        .mode-btn:hover {
+            color: #1a1a1a;
+        }
+
+        .timer-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .timer-circle {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin-bottom: 24px;
+        }
+
+        .timer-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .timer-circle-bg {
+            stroke: #e8e6e1;
+            stroke-width: 8;
+            fill: none;
+        }
+
+        .timer-circle-progress {
+            stroke-width: 8;
+            fill: none;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.3s linear;
+        }
+
+        .timer-circle-progress.focus {
+            stroke: #1D9E75;
+        }
+
+        .timer-circle-progress.short {
+            stroke: #2196F3;
+        }
+
+        .timer-circle-progress.long {
+            stroke: #9C27B0;
+        }
+
+        .timer-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-time {
+            font-size: 56px;
+            font-weight: 700;
+            color: #1a1a1a;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -1px;
+        }
+
+        .timer-mode {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b6b6b;
+            text-transform: capitalize;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        .btn-play-pause {
+            width: 64px;
+            height: 64px;
+            background: #1D9E75;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-play-pause:hover {
+            background: #0F6E56;
+            transform: scale(1.05);
+        }
+
+        .btn-play-pause:active {
+            transform: scale(0.95);
+        }
+
+        .btn-reset {
+            width: 64px;
+            height: 64px;
+            background: white;
+            color: #1D9E75;
+            border: 1.5px solid #e8e6e1;
+            border-radius: 12px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-reset:hover {
+            border-color: #1D9E75;
+            background: #E1F5EE;
+        }
+
+        .btn-reset:active {
+            transform: scale(0.95);
+        }
+
+        .session-tracker {
+            text-align: center;
+            margin-bottom: 28px;
+            padding: 20px;
+            background: #fafaf8;
+            border-radius: 12px;
+        }
+
+        .session-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e8e6e1;
+            transition: all 0.3s ease;
+        }
+
+        .dot.completed {
+            background: #1D9E75;
+        }
+
+        .session-text {
+            font-size: 13px;
+            color: #6b6b6b;
+            font-weight: 500;
+        }
+
+        .settings-section {
+            margin-bottom: 24px;
+            border-top: 1px solid #e8e6e1;
+            padding-top: 20px;
+        }
+
+        .settings-toggle {
+            background: none;
+            border: none;
+            color: #1a1a1a;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0;
+        }
+
+        .settings-toggle:hover {
+            color: #1D9E75;
+        }
+
+        .settings-toggle .arrow {
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .settings-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .settings-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .settings-content.open {
+            max-height: 500px;
+        }
+
+        .setting-group {
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .setting-label {
+            font-size: 13px;
+            color: #6b6b6b;
+            font-weight: 500;
+        }
+
+        .setting-select {
+            padding: 10px 14px;
+            border: 1.5px solid #e8e6e1;
+            border-radius: 12px;
+            background: #fafaf8;
+            color: #1a1a1a;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .setting-select:hover {
+            border-color: #1D9E75;
+        }
+
+        .setting-select:focus {
+            outline: none;
+            border-color: #1D9E75;
+            background: white;
+        }
+
+        .info-section {
+            background: #E1F5EE;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0F6E56;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #1D9E75;
+            line-height: 1.6;
+        }
+
+        .branding {
+            text-align: center;
+            font-size: 11px;
+            color: #9a9a9a;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e8e6e1;
+        }
+
+        .branding a {
+            color: #1D9E75;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .branding a:hover {
+            text-decoration: underline;
+        }
+
+        .embed .branding {
+            display: none;
+        }
+
+        .notification-info {
+            font-size: 12px;
+            color: #9a9a9a;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px;
+                border-radius: 16px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .timer-circle {
+                width: 180px;
+                height: 180px;
+            }
+
+            .timer-time {
+                font-size: 48px;
+            }
+
+            .mode-selector {
+                gap: 8px;
+            }
+
+            .mode-btn {
+                font-size: 12px;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon-box">🍅</div>
+            <h1 class="title">Pomodoro Zamanlayıcı</h1>
+            <p class="subtitle">Odaklan, mola ver,
+verimli çalış</p>
+        </div>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="focus">Odaklan</button>
+            <button class="mode-btn" data-mode="short">Kısa Mola</button>
+            <button class="mode-btn" data-mode="long">Uzun Mola</button>
+        </div>
+
+        <div class="timer-section">
+            <div class="timer-circle">
+                <svg class="timer-svg" viewBox="0 0 220 220">
+                    <circle class="timer-circle-bg" cx="110" cy="110" r="100"></circle>
+                    <circle class="timer-circle-progress focus" cx="110" cy="110" r="100"
+                            stroke-dasharray="628.3" stroke-dashoffset="0"></circle>
+                </svg>
+                <div class="timer-display">
+                    <div class="timer-time" id="timerDisplay">25:00</div>
+                    <div class="timer-mode" id="timerMode">Odaklanma</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-play-pause" id="playPauseBtn" title="Başla">▶</button>
+                <button class="btn-reset" id="resetBtn" title="Sıfırla">↻</button>
+            </div>
+
+            <div class="session-tracker">
+                <div class="session-dots" id="sessionDots"></div>
+                <div class="session-text">
+                    Bugün: <span id="completedCount">0</span> pomodoro tamamlandı
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">Pomodoro Tekniği Nedir?</div>
+            <div class="info-text">
+                Pomodoro, konsantrasyonu artırmak için 25 dakikalık odaklanma ve 5 dakikalık mola dönemlerini kullanan bir verimlilik tekniğidir. Her 4 pomodoro sonrasında daha uzun bir mola verin.
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <button class="settings-toggle" id="settingsToggle">
+                <span>⚙️ Ayarlar</span>
+                <span class="arrow">▼</span>
+            </button>
+            <div class="settings-content" id="settingsContent">
+                <div class="setting-group">
+                    <label class="setting-label">Odaklanma Süresi</label>
+                    <select class="setting-select" id="focusSelect">
+                        <option value="15">15 dakika</option>
+                        <option value="20">20 dakika</option>
+                        <option value="25" selected>25 dakika</option>
+                        <option value="30">30 dakika</option>
+                        <option value="45">45 dakika</option>
+                        <option value="60">60 dakika</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label class="setting-label">Kısa Mola</label>
+                    <select class="setting-select" id="shortSelect">
+                        <option value="3">3 dakika</option>
+                        <option value="5" selected>5 dakika</option>
+                        <option value="10">10 dakika</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label class="setting-label">Uzun Mola</label>
+                    <select class="setting-select" id="longSelect">
+                        <option value="10">10 dakika</option>
+                        <option value="15" selected>15 dakika</option>
+                        <option value="20">20 dakika</option>
+                        <option value="30">30 dakika</option>
+                    </select>
+                </div>
+                <div class="notification-info">
+                    Zamanlayıcı bittiğinde tarayıcı bildirimi alırsınız (izin verirseniz).
+                </div>
+            </div>
+        </div>
+
+        <div class="branding">
+            <a href="https://iyibirhayat.com">iyibirhayat.com</a> · Bilimsel temelli araçlar
+        </div>
+    </div>
+
+    <script>
+        // State management
+        const state = {
+            mode: 'focus',
+            isRunning: false,
+            timeLeft: 25 * 60,
+            totalTime: 25 * 60,
+            sessionsCompleted: 0,
+            settings: {
+                focus: 25,
+                short: 5,
+                long: 15
+            },
+            lastTickTime: null,
+            audioContext: null
+        };
+
+        // Get query params
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('embed') === '1') {
+            document.body.classList.add('embed');
+        }
+
+        // DOM elements
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerMode = document.getElementById('timerMode');
+        const modeBtns = document.querySelectorAll('.mode-btn');
+        const sessionDots = document.getElementById('sessionDots');
+        const completedCount = document.getElementById('completedCount');
+        const settingsToggle = document.getElementById('settingsToggle');
+        const settingsContent = document.getElementById('settingsContent');
+        const focusSelect = document.getElementById('focusSelect');
+        const shortSelect = document.getElementById('shortSelect');
+        const longSelect = document.getElementById('longSelect');
+        const circleProgress = document.querySelector('.timer-circle-progress');
+
+        // Initialize session dots
+        function renderSessionDots() {
+            sessionDots.innerHTML = '';
+            const totalDots = Math.ceil(state.sessionsCompleted / 4) * 4 || 4;
+            for (let i = 0; i < totalDots; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (i < state.sessionsCompleted) {
+                    dot.classList.add('completed');
+                }
+                sessionDots.appendChild(dot);
+            }
+            completedCount.textContent = state.sessionsCompleted;
+        }
+
+        // Load settings from localStorage
+        function loadSettings() {
+            const saved = localStorage.getItem('pomodoroSettings');
+            if (saved) {
+                state.settings = JSON.parse(saved);
+                focusSelect.value = state.settings.focus;
+                shortSelect.value = state.settings.short;
+                longSelect.value = state.settings.long;
+            }
+
+            const savedSessions = localStorage.getItem('pomodoroSessions');
+            if (savedSessions) {
+                state.sessionsCompleted = parseInt(savedSessions, 10);
+            }
+
+            renderSessionDots();
+        }
+
+        // Save settings to localStorage
+        function saveSettings() {
+            localStorage.setItem('pomodoroSettings', JSON.stringify(state.settings));
+        }
+
+        function saveSessions() {
+            localStorage.setItem('pomodoroSessions', state.sessionsCompleted.toString());
+        }
+
+        // Mode label mapping
+        const modeLabels = {
+            focus: 'Odaklanma',
+            short: 'Kısa Mola',
+            long: 'Uzun Mola'
+        };
+
+        // Format time as MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Update timer display
+        function updateDisplay() {
+            timerDisplay.textContent = formatTime(state.timeLeft);
+            timerMode.textContent = modeLabels[state.mode];
+
+            // Update progress circle
+            const circumference = 2 * Math.PI * 100;
+            const progress = state.timeLeft / state.totalTime;
+            const offset = circumference * (1 - progress);
+            circleProgress.style.strokeDashoffset = offset;
+
+            // Update circle color
+            circleProgress.classList.remove('focus', 'short', 'long');
+            circleProgress.classList.add(state.mode);
+        }
+
+        // Generate audio tone
+        function generateTone() {
+            if (!state.audioContext) {
+                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const ctx = state.audioContext;
+            const now = ctx.currentTime;
+
+            // Create oscillators for a pleasant notification sound
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc1.frequency.value = 800;
+            osc2.frequency.value = 600;
+            osc1.type = 'sine';
+            osc2.type = 'sine';
+
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(ctx.destination);
+
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + 0.5);
+            osc2.stop(now + 0.5);
+        }
+
+        // Timer completion
+        function onTimerComplete() {
+            state.isRunning = false;
+            generateTone();
+
+            // Request notification permission and show notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Pomodoro Zamanlayıcı', {
+                    body: `${modeLabels[state.mode]} tamamlandı!`,
+                    icon: '🍅'
+                });
+            }
+
+            // Increment session count if focus session
+            if (state.mode === 'focus') {
+                state.sessionsCompleted++;
+                saveSessions();
+                renderSessionDots();
+
+                // Auto-suggest long break after 4 pomodoros
+                if (state.sessionsCompleted % 4 === 0) {
+                    const isSuggestionShown = localStorage.getItem('longBreakSuggestion_' + new Date().toDateString());
+                    if (!isSuggestionShown) {
+                        const shouldTakeLongBreak = confirm('4 pomodoro tamamladınız! Uzun molaya geçmek ister misiniz?');
+                        if (shouldTakeLongBreak) {
+                            setMode('long');
+                        }
+                        localStorage.setItem('longBreakSuggestion_' + new Date().toDateString(), 'true');
+                    }
+                }
+            }
+
+            updatePlayPauseButton();
+            updateDisplay();
+        }
+
+        // Update timer every tick
+        function tick() {
+            if (!state.isRunning) return;
+
+            const now = Date.now();
+            if (state.lastTickTime === null) {
+                state.lastTickTime = now;
+            }
+
+            const elapsed = Math.floor((now - state.lastTickTime) / 1000);
+            state.lastTickTime = now;
+
+            state.timeLeft -= elapsed;
+
+            if (state.timeLeft <= 0) {
+                state.timeLeft = 0;
+                onTimerComplete();
+            }
+
+            updateDisplay();
+        }
+
+        // Animation loop
+        function animationLoop() {
+            tick();
+            requestAnimationFrame(animationLoop);
+        }
+
+        // Set mode
+        function setMode(mode) {
+            if (state.isRunning) return;
+
+            state.mode = mode;
+            state.totalTime = state.settings[mode] * 60;
+            state.timeLeft = state.totalTime;
+
+            // Update button states
+            modeBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.mode === mode) {
+                    btn.classList.add('active');
+                }
+            });
+
+            updateDisplay();
+        }
+
+        // Play/Pause
+        function togglePlayPause() {
+            state.isRunning = !state.isRunning;
+            if (state.isRunning) {
+                state.lastTickTime = null;
+            }
+            updatePlayPauseButton();
+        }
+
+        function updatePlayPauseButton() {
+            playPauseBtn.textContent = state.isRunning ? '⏸' : '▶';
+            playPauseBtn.title = state.isRunning ? 'Duraklat' : 'Başla';
+        }
+
+        // Reset
+        function reset() {
+            state.isRunning = false;
+            state.timeLeft = state.totalTime;
+            state.lastTickTime = null;
+            updatePlayPauseButton();
+            updateDisplay();
+        }
+
+        // Settings toggle
+        function toggleSettings() {
+            settingsToggle.classList.toggle('open');
+            settingsContent.classList.toggle('open');
+        }
+
+        // Event listeners
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        resetBtn.addEventListener('click', reset);
+        settingsToggle.addEventListener('click', toggleSettings);
+
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setMode(btn.dataset.mode);
+            });
+        });
+
+        focusSelect.addEventListener('change', (e) => {
+            state.settings.focus = parseInt(e.target.value, 10);
+            saveSettings();
+            if (state.mode === 'focus' && !state.isRunning) {
+                state.totalTime = state.settings.focus * 60;
+                state.timeLeft = state.totalTime;
+                updateDisplay();
+            }
+        });
+
+        shortSelect.addEventListener('change', (e) => {
+            state.settings.short = parseInt(e.target.value, 10);
+            saveSettings();
+            if (state.mode === 'short' && !state.isRunning) {
+                state.totalTime = state.settings.short * 60;
+                state.timeLeft = state.totalTime;
+                updateDisplay();
+            }
+        });
+
+        longSelect.addEventListener('change', (e) => {
+            state.settings.long = parseInt(e.target.value, 10);
+            saveSettings();
+            if (state.mode === 'long' && !state.isRunning) {
+                state.totalTime = state.settings.long * 60;
+                state.timeLeft = state.totalTime;
+                updateDisplay();
+            }
+        });
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Initialize
+        loadSettings();
+        updateDisplay();
+        updatePlayPauseButton();
+        renderSessionDots();
+        animationLoop();
+    </script>
+</body>
+</html>

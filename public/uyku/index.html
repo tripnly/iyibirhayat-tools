@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uyku Hesaplayıcı - iyibirhayat.com</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f7f4;
+            padding: 24px 16px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.embed-mode {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e8e6e1;
+            margin-bottom: 20px;
+        }
+
+        .embed-mode .card {
+            box-shadow: none;
+            border: none;
+            padding: 24px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            background-color: #E1F5EE;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #6b6b6b;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1.5px solid #e8e6e1;
+            background-color: #fafaf8;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b6b6b;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background-color: #E1F5EE;
+            border-color: #1D9E75;
+            color: #1D9E75;
+        }
+
+        .mode-btn:hover {
+            border-color: #1D9E75;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        input[type="time"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e8e6e1;
+            border-radius: 12px;
+            background-color: #fafaf8;
+            font-size: 16px;
+            color: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="time"]:focus {
+            outline: none;
+            border-color: #1D9E75;
+        }
+
+        .current-time {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            padding: 14px 16px;
+            background-color: #fafaf8;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .button {
+            width: 100%;
+            padding: 16px;
+            background-color: #1D9E75;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .button:hover {
+            background-color: #0F6E56;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(29, 158, 117, 0.2);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.secondary {
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+            border: 1.5px solid #e8e6e1;
+        }
+
+        .button.secondary:hover {
+            background-color: #f0f0f0;
+            border-color: #1D9E75;
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .result-card {
+            background-color: #fafaf8;
+            border: 1.5px solid #e8e6e1;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            border-color: #1D9E75;
+            background-color: #f0faf7;
+        }
+
+        .result-card.recommended {
+            background-color: #E1F5EE;
+            border-color: #1D9E75;
+        }
+
+        .result-time {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+        }
+
+        .result-details {
+            font-size: 13px;
+            color: #6b6b6b;
+        }
+
+        .result-badge {
+            display: inline-block;
+            background-color: #1D9E75;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .share-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1.5px solid #e8e6e1;
+            background-color: #fafaf8;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .share-btn:hover {
+            background-color: #f0f0f0;
+            border-color: #1D9E75;
+        }
+
+        .info-card {
+            background-color: #fafaf8;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .info-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #6b6b6b;
+            line-height: 1.6;
+        }
+
+        .branding {
+            text-align: center;
+            font-size: 12px;
+            color: #9a9a9a;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e8e6e1;
+        }
+
+        .branding a {
+            color: #1D9E75;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .branding a:hover {
+            text-decoration: underline;
+        }
+
+        .embed-mode .branding {
+            display: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background-color: #1a1a1a;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            animation: slideUp 0.3s ease;
+            z-index: 1000;
+            max-width: 460px;
+            margin: 0 auto;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px;
+            }
+
+            .header {
+                margin-bottom: 24px;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+
+            .result-cards {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div class="icon-box">🌙</div>
+                <h1 class="title">Uyku Hesaplayıcı</h1>
+                <p class="subtitle">İdeal uyku saatini öğren,
+dinlenmiş uyan</p>
+            </div>
+
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="wake">
+                    Uyumak istiyorum
+                </button>
+                <button class="mode-btn" data-mode="sleep">
+                    Şimdi uyuyacağım
+                </button>
+            </div>
+
+            <!-- Wake Time Mode -->
+            <div id="wake-mode" class="mode-content">
+                <div class="input-group">
+                    <label class="input-label">Uyanmak istediğim saat</label>
+                    <input type="time" id="wake-time-input" placeholder="HH:MM">
+                </div>
+                <button class="button" id="calculate-wake-btn">Hesapla</button>
+            </div>
+
+            <!-- Sleep Now Mode -->
+            <div id="sleep-mode" class="mode-content hidden">
+                <div class="input-group">
+                    <label class="input-label">Şu anki saat</label>
+                    <div class="current-time" id="current-time">00:00</div>
+                </div>
+                <button class="button" id="calculate-sleep-btn">Hesapla</button>
+            </div>
+
+            <!-- Results -->
+            <div id="results" class="results">
+                <div class="result-cards" id="result-cards"></div>
+
+                <div class="share-buttons">
+                    <button class="share-btn" id="copy-btn">📋 Kopyala</button>
+                    <button class="share-btn" id="whatsapp-btn">💬 WhatsApp</button>
+                    <button class="share-btn" id="twitter-btn">𝕏 X/Twitter</button>
+                </div>
+
+                <button class="button secondary" id="reset-btn">↻ Yeniden Hesapla</button>
+            </div>
+
+            <!-- Info Cards -->
+            <div id="info-section">
+                <div class="info-card">
+                    <div class="info-title">💤 Uyku Döngüleri Nedir?</div>
+                    <div class="info-text">
+                        İnsan uyku döngüleri ortalama 90 dakika sürer. Her döngüde hafif uyku, derin uyku ve REM (Hızlı Göz Hareketi) uyku aşamaları yaşanır. Tam sayıda döngüyü tamamladıktan sonra uyanmak, daha dinlenmiş ve iyi hissetmenizi sağlar.
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">✨ Uyku Hijyeni Tavsiyeleri</div>
+                    <div class="info-text">
+                        • Uyumadan 1 saat önce ekran kullanmayı bırakın<br>
+                        • Yatak odasının sıcaklığını 16-19°C tutun<br>
+                        • Her gün aynı saatte uyuyup uyanın<br>
+                        • Kafein ve ağır yemeklerden kaçının<br>
+                        • Düzenli egzersiz yapın (gün içinde)
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-title">📊 Türkiye İstatistiği</div>
+                    <div class="info-text">
+                        Türkiye'de yetişkinlerin ortalama uyku süresi 6,5 saattir. Uykuya ilişkin uzman araştırmalara göre, yetişkinler 7-9 saat uyku almalıdırlar.
+                    </div>
+                </div>
+            </div>
+
+            <div class="branding">
+                <a href="https://iyibirhayat.com" target="_blank">iyibirhayat.com</a> · Bilimsel temelli araçlar
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SLEEP_CYCLE_MINUTES = 90;
+        const FALL_ASLEEP_MINUTES = 14;
+
+        // DOM Elements
+        const modeBtns = document.querySelectorAll('.mode-btn');
+        const wakeModeDiv = document.getElementById('wake-mode');
+        const sleepModeDiv = document.getElementById('sleep-mode');
+        const wakeTimeInput = document.getElementById('wake-time-input');
+        const currentTimeDisplay = document.getElementById('current-time');
+        const calculateWakeBtn = document.getElementById('calculate-wake-btn');
+        const calculateSleepBtn = document.getElementById('calculate-sleep-btn');
+        const resultsDiv = document.getElementById('results');
+        const resultCardsDiv = document.getElementById('result-cards');
+        const resetBtn = document.getElementById('reset-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const whatsappBtn = document.getElementById('whatsapp-btn');
+        const twitterBtn = document.getElementById('twitter-btn');
+        const infoSection = document.getElementById('info-section');
+
+        let currentMode = 'wake';
+        let lastResults = [];
+
+        // Check for embed mode
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('embed') === '1') {
+            document.body.classList.add('embed-mode');
+        }
+
+        // Update current time display
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            currentTimeDisplay.textContent = `${hours}:${minutes}`;
+        }
+
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
+
+        // Mode switching
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+
+                if (currentMode === 'wake') {
+                    wakeModeDiv.classList.remove('hidden');
+                    sleepModeDiv.classList.add('hidden');
+                } else {
+                    wakeModeDiv.classList.add('hidden');
+                    sleepModeDiv.classList.remove('hidden');
+                }
+
+                resetUI();
+            });
+        });
+
+        // Calculate bedtimes from wake time
+        function calculateBedtimes(wakeTimeStr) {
+            const [wakeHours, wakeMinutes] = wakeTimeStr.split(':').map(Number);
+            const wakeTime = wakeHours * 60 + wakeMinutes;
+
+            const results = [];
+            for (let cycles = 6; cycles >= 4; cycles--) {
+                const sleepMinutes = cycles * SLEEP_CYCLE_MINUTES;
+                const bedtimeMinutes = wakeTime - sleepMinutes - FALL_ASLEEP_MINUTES;
+                const adjustedBedtime = bedtimeMinutes < 0 ? bedtimeMinutes + 1440 : bedtimeMinutes;
+
+                const hours = Math.floor(adjustedBedtime / 60);
+                const minutes = adjustedBedtime % 60;
+
+                results.push({
+                    time: `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`,
+                    cycles: cycles,
+                    hours: Math.floor(sleepMinutes / 60),
+                    minutes: sleepMinutes % 60,
+                    recommended: cycles === 5
+                });
+            }
+
+            return results;
+        }
+
+        // Calculate wake times from now
+        function calculateWakeTimes() {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            const results = [];
+            for (let cycles = 4; cycles <= 6; cycles++) {
+                const sleepMinutes = cycles * SLEEP_CYCLE_MINUTES + FALL_ASLEEP_MINUTES;
+                const wakeMinutes = currentMinutes + sleepMinutes;
+                const adjustedWakeTime = wakeMinutes >= 1440 ? wakeMinutes - 1440 : wakeMinutes;
+
+                const hours = Math.floor(adjustedWakeTime / 60);
+                const minutes = adjustedWakeTime % 60;
+
+                results.push({
+                    time: `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`,
+                    cycles: cycles,
+                    hours: Math.floor((sleepMinutes - FALL_ASLEEP_MINUTES) / 60),
+                    minutes: (sleepMinutes - FALL_ASLEEP_MINUTES) % 60,
+                    recommended: cycles === 5
+                });
+            }
+
+            return results;
+        }
+
+        // Display results
+        function displayResults(results) {
+            lastResults = results;
+            resultCardsDiv.innerHTML = '';
+
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.className = `result-card ${result.recommended ? 'recommended' : ''}`;
+                card.innerHTML = `
+                    <div class="result-time">${result.time}</div>
+                    <div class="result-details">
+                        ${result.cycles} döngü · ${result.hours} saat ${result.minutes} dakika uyku
+                        ${result.recommended ? '<div class="result-badge">Önerilen ⭐</div>' : ''}
+                    </div>
+                `;
+                resultCardsDiv.appendChild(card);
+            });
+
+            resultsDiv.classList.add('show');
+            infoSection.classList.add('hidden');
+            resultCardsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Calculate wake time
+        calculateWakeBtn.addEventListener('click', () => {
+            const wakeTime = wakeTimeInput.value;
+            if (!wakeTime) {
+                showToast('Lütfen uyanmak istediğiniz saati seçin');
+                return;
+            }
+            const results = calculateBedtimes(wakeTime);
+            displayResults(results);
+        });
+
+        // Calculate sleep time
+        calculateSleepBtn.addEventListener('click', () => {
+            const results = calculateWakeTimes();
+            displayResults(results);
+        });
+
+        // Reset UI
+        function resetUI() {
+            resultsDiv.classList.remove('show');
+            infoSection.classList.remove('hidden');
+            wakeTimeInput.value = '';
+            lastResults = [];
+        }
+
+        resetBtn.addEventListener('click', resetUI);
+
+        // Share functionality
+        function getShareText() {
+            if (lastResults.length === 0) return '';
+            const recommended = lastResults.find(r => r.recommended);
+            if (currentMode === 'wake') {
+                return `Uyku hesaplayıcı ile ${recommended.time}'de yatmalıyım diye hesapladım. ${recommended.hours} saat ${recommended.minutes} dakika uyku alacağım. Siz uykunuzu planladınız mı? 🌙`;
+            } else {
+                return `Şimdi uyuyacağım moda göre ${recommended.time}'de uyanmalıyım. ${recommended.hours} saat ${recommended.minutes} dakika uyku alacağım. Siz ne kadar uyuyorsunuz? 🌙`;
+            }
+        }
+
+        copyBtn.addEventListener('click', () => {
+            const text = getShareText();
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Panoya kopyalandı! ✓');
+            });
+        });
+
+        whatsappBtn.addEventListener('click', () => {
+            const text = encodeURIComponent(getShareText());
+            const url = `https://wa.me/?text=${text}`;
+            window.open(url, '_blank');
+        });
+
+        twitterBtn.addEventListener('click', () => {
+            const text = encodeURIComponent(getShareText());
+            const url = `https://x.com/intent/tweet?text=${text}`;
+            window.open(url, '_blank');
+        });
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Allow Enter key to calculate
+        wakeTimeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                calculateWakeBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

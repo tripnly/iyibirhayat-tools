@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kişilik Testi - iyibirhayat.com</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f7f4;
+            color: #1a1a1a;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 460px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            border: 1px solid #e8e6e1;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            background-color: #E1F5EE;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #6b6b6b;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .progress-section {
+            margin-bottom: 24px;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: #9a9a9a;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e8e6e1;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #1D9E75;
+            transition: width 0.3s ease-out;
+        }
+
+        .question-text {
+            font-size: 16px;
+            color: #1a1a1a;
+            font-weight: 500;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .question-number {
+            font-size: 14px;
+            color: #9a9a9a;
+            margin-bottom: 12px;
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .answer-option {
+            padding: 14px 16px;
+            border: 1.5px solid #e8e6e1;
+            border-radius: 12px;
+            background-color: #fafaf8;
+            color: #1a1a1a;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .answer-option:hover {
+            border-color: #1D9E75;
+            background-color: #f0f8f5;
+        }
+
+        .answer-option.selected {
+            background-color: #E1F5EE;
+            border-color: #1D9E75;
+            color: #0F6E56;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .button-primary {
+            background-color: #1D9E75;
+            color: white;
+        }
+
+        .button-primary:hover:not(:disabled) {
+            background-color: #0F6E56;
+        }
+
+        .button-primary:disabled {
+            background-color: #9a9a9a;
+            cursor: not-allowed;
+        }
+
+        .button-secondary {
+            background-color: #fafaf8;
+            color: #1a1a1a;
+            border: 1.5px solid #e8e6e1;
+        }
+
+        .button-secondary:hover {
+            background-color: #f0f0f0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .results-container {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .chart-container {
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .traits-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .trait-card {
+            background-color: #fafaf8;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e8e6e1;
+        }
+
+        .trait-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .trait-icon {
+            font-size: 20px;
+        }
+
+        .trait-name {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .trait-score {
+            font-size: 12px;
+            color: #6b6b6b;
+        }
+
+        .trait-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e8e6e1;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .trait-bar-fill {
+            height: 100%;
+            background-color: #1D9E75;
+            transition: width 0.6s ease-out;
+        }
+
+        .trait-description {
+            font-size: 12px;
+            color: #6b6b6b;
+            line-height: 1.4;
+        }
+
+        .summary-section {
+            background-color: #E1F5EE;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border: 1px solid #1D9E75;
+        }
+
+        .summary-title {
+            font-weight: 600;
+            color: #0F6E56;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .summary-text {
+            font-size: 14px;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        .share-section {
+            margin-bottom: 24px;
+        }
+
+        .share-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .share-button {
+            flex: 1;
+            padding: 12px;
+            border: 1.5px solid #e8e6e1;
+            background-color: #fafaf8;
+            color: #1a1a1a;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .share-button:hover {
+            border-color: #1D9E75;
+            background-color: #f0f8f5;
+            color: #1D9E75;
+        }
+
+        .reset-button {
+            width: 100%;
+            padding: 16px;
+            background-color: #fafaf8;
+            color: #1a1a1a;
+            border: 1.5px solid #e8e6e1;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .reset-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .branding {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 12px;
+            color: #9a9a9a;
+        }
+
+        .branding a {
+            color: #1D9E75;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .branding a:hover {
+            text-decoration: underline;
+        }
+
+        body.embed {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .embed .card {
+            box-shadow: none;
+            border: none;
+            padding: 0;
+        }
+
+        .embed .branding {
+            display: none;
+        }
+
+        .radar {
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.08));
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 24px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .question-text {
+                font-size: 15px;
+            }
+
+            .answer-option {
+                font-size: 13px;
+                padding: 12px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="card">
+            <div class="header">
+                <div class="icon-box">🎭</div>
+                <h1>Kişilik Testi</h1>
+                <p class="subtitle">Kişilik özelliklerini keşfet,
+kendini daha iyi tanı</p>
+            </div>
+            <button class="button button-primary" onclick="startTest()" style="width: 100%; padding: 16px; margin-top: 24px;">
+                Teste Başla
+            </button>
+        </div>
+
+        <!-- Test Screen -->
+        <div id="testScreen" class="card hidden">
+            <div class="progress-section">
+                <div class="progress-label">
+                    <span id="questionNumber">Soru 1/20</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill" style="width: 5%;"></div>
+                </div>
+            </div>
+
+            <div class="question-number" id="qNum">Soru 1/20</div>
+            <div class="question-text" id="questionText">Soru yükleniyor...</div>
+
+            <div class="answer-options" id="answerOptions">
+                <!-- Options will be generated by JS -->
+            </div>
+
+            <div class="button-group">
+                <button id="prevButton" class="button button-secondary" onclick="previousQuestion()" style="display: none;">
+                    ← Geri
+                </button>
+                <button id="nextButton" class="button button-primary" onclick="nextQuestion()" disabled>
+                    Devam →
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="card hidden results-container">
+            <div class="header" style="margin-bottom: 24px;">
+                <div class="icon-box">🎭</div>
+                <h1>Senin Kişilik Profilin</h1>
+            </div>
+
+            <div class="chart-container">
+                <svg id="radarChart" class="radar" width="280" height="280"></svg>
+            </div>
+
+            <div class="traits-grid" id="traitsGrid">
+                <!-- Trait cards will be generated by JS -->
+            </div>
+
+            <div class="summary-section">
+                <div class="summary-title">Baskın Kişilik Özelliklerin</div>
+                <div class="summary-text" id="summaryText"></div>
+            </div>
+
+            <div class="share-section">
+                <div class="share-title">Sonuçlarını Paylaş</div>
+                <div class="share-buttons">
+                    <button class="share-button" onclick="copyResults()">📋 Kopyala</button>
+                    <button class="share-button" onclick="shareWhatsApp()">💬 WhatsApp</button>
+                    <button class="share-button" onclick="shareTwitter()">𝕏 Twitter</button>
+                </div>
+            </div>
+
+            <button class="reset-button" onclick="resetTest()">↻ Testi Tekrarla</button>
+        </div>
+
+        <div class="branding">
+            <a href="https://iyibirhayat.com">iyibirhayat.com</a> · Bilimsel temelli araçlar
+        </div>
+    </div>
+
+    <script>
+        // Trait definitions
+        const traits = [
+            {
+                id: 'extraversion',
+                name: 'Dışadönüklük',
+                emoji: '🌟',
+                lowDesc: 'İçe dönük bir yapınız var. Yalnız vakit geçirmeyi tercih edersiniz.',
+                mediumDesc: 'Sosyal ortamlarla tek başınız olmakta da rahat hissedersiniz.',
+                highDesc: 'Sosyal, enerjik ve dışa dönüksünüz. İnsanlarla vakit geçirmekten keyif alırsınız.'
+            },
+            {
+                id: 'agreeableness',
+                name: 'Uyumluluk',
+                emoji: '🤝',
+                lowDesc: 'Kendi ihtiyaçlarınızı diğerlerinkinin üzerine koymaya eğilimliysiniz.',
+                mediumDesc: 'Başkalarının duygularını anlamaya çalışırken, sınırlarınızı da korursunuz.',
+                highDesc: 'Çok anlayışlı ve empatik biriysiniz. Başkalarına yardım etmekten mutluluk duyarsınız.'
+            },
+            {
+                id: 'conscientiousness',
+                name: 'Sorumluluk',
+                emoji: '📋',
+                lowDesc: 'Daha rahat ve spontan bir yapınız vardır. Planlama size çoğu zaman zorluk verir.',
+                mediumDesc: 'Önemli işlerde planlı olursunuz, ancak bazı alanlarında daha esnek davranırsınız.',
+                highDesc: 'Çok düzenli ve sorumlunuz. Başladığınız işleri her zaman bitirmeye çalışırsınız.'
+            },
+            {
+                id: 'emotional',
+                name: 'Duygusal Denge',
+                emoji: '⚖️',
+                lowDesc: 'Duygusal iniş çıkışlar sizde belirgindir. Stresli durumlarda kaygılanabilirsiniz.',
+                mediumDesc: 'Genellikle sakinsiniz, ancak belirli durumlarda stres alabilirsiniz.',
+                highDesc: 'Stresli durumlarda sakin kalabilirsiniz ve zor zamanlardan çabuk toparlanırsınız.'
+            },
+            {
+                id: 'openness',
+                name: 'Deneyime Açıklık',
+                emoji: '🎨',
+                lowDesc: 'Bildik rutinleri tercih edersiniz. Değişiklik sizi tedirgin edebilir.',
+                mediumDesc: 'Yeni şeylere meraklı olmakla, bilineni sevmek arasında denge kurarsınız.',
+                highDesc: 'Yaratıcı, meraklı ve yeniliğe açıksınız. Yeni fikirler sizi heyecanlandırır.'
+            }
+        ];
+
+        // Questions (4 per trait, some reverse-scored marked with -1)
+        const questions = [
+            // Extraversion (0-3)
+            { trait: 0, text: 'Sosyal ortamlarda enerjik ve canlı hissederim.', reverse: 1 },
+            { trait: 0, text: 'Yeni insanlarla tanışmaktan keyif alırım.', reverse: 1 },
+            { trait: 0, text: 'Genellikle sessiz ve içe dönük biriyimdir.', reverse: -1 },
+            { trait: 0, text: 'Grup etkinliklerinde liderlik rolü üstlenmeyi severim.', reverse: 1 },
+            // Agreeableness (4-7)
+            { trait: 1, text: 'Başkalarının duygularını anlamaya çalışırım.', reverse: 1 },
+            { trait: 1, text: 'İnsanlara yardım etmekten mutluluk duyarım.', reverse: 1 },
+            { trait: 1, text: 'Bazen başkalarının niyetlerine güvenmekte zorlanırım.', reverse: -1 },
+            { trait: 1, text: 'İş birliği yapmayı rekabet etmeye tercih ederim.', reverse: 1 },
+            // Conscientiousness (8-11)
+            { trait: 2, text: 'İşlerimi planlı ve düzenli bir şekilde yaparım.', reverse: 1 },
+            { trait: 2, text: 'Başladığım işleri her zaman bitirmeye çalışırım.', reverse: 1 },
+            { trait: 2, text: 'Bazen işleri son dakikaya bırakırım.', reverse: -1 },
+            { trait: 2, text: 'Detaylara dikkat etmek benim için önemlidir.', reverse: 1 },
+            // Emotional Stability (12-15)
+            { trait: 3, text: 'Stresli durumlarda sakin kalabilirim.', reverse: 1 },
+            { trait: 3, text: 'Duygusal iniş çıkışlarım azdır.', reverse: 1 },
+            { trait: 3, text: 'Küçük sorunlar bile bazen beni çok endişelendirir.', reverse: -1 },
+            { trait: 3, text: 'Zor zamanlardan çabuk toparlanırım.', reverse: 1 },
+            // Openness (16-19)
+            { trait: 4, text: 'Yeni fikirler ve farklı bakış açıları beni heyecanlandırır.', reverse: 1 },
+            { trait: 4, text: 'Sanat, müzik veya edebiyatla ilgilenmeyi severim.', reverse: 1 },
+            { trait: 4, text: 'Değişiklikten çok, rutini tercih ederim.', reverse: -1 },
+            { trait: 4, text: 'Yaratıcı çözümler bulmakta başarılıyımdır.', reverse: 1 }
+        ];
+
+        const answerLabels = [
+            'Hiç katılmıyorum',
+            'Katılmıyorum',
+            'Kararsızım',
+            'Katılıyorum',
+            'Kesinlikle katılıyorum'
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(20).fill(null);
+        let scores = new Array(5).fill(0);
+
+        function getEmbedMode() {
+            return new URLSearchParams(window.location.search).get('embed') === '1';
+        }
+
+        if (getEmbedMode()) {
+            document.body.classList.add('embed');
+        }
+
+        function startTest() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('testScreen').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('qNum').textContent = `Soru ${currentQuestion + 1}/20`;
+            document.getElementById('questionNumber').textContent = `Soru ${currentQuestion + 1}/20`;
+            document.getElementById('questionText').textContent = q.text;
+            document.getElementById('progressFill').style.width = `${((currentQuestion + 1) / 20) * 100}%`;
+
+            // Generate answer options
+            const optionsContainer = document.getElementById('answerOptions');
+            optionsContainer.innerHTML = '';
+            answerLabels.forEach((label, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-option';
+                btn.textContent = label;
+                if (answers[currentQuestion] === idx) {
+                    btn.classList.add('selected');
+                }
+                btn.onclick = () => selectAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Update button visibility
+            document.getElementById('prevButton').style.display = currentQuestion > 0 ? 'block' : 'none';
+            document.getElementById('nextButton').disabled = answers[currentQuestion] === null;
+        }
+
+        function selectAnswer(value) {
+            answers[currentQuestion] = value;
+            document.querySelectorAll('.answer-option').forEach((btn, idx) => {
+                if (idx === value) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+            document.getElementById('nextButton').disabled = false;
+
+            // Auto-advance
+            setTimeout(() => {
+                if (currentQuestion < 19) {
+                    nextQuestion();
+                }
+            }, 300);
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < 19) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                calculateResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function calculateResults() {
+            // Reset scores
+            scores = new Array(5).fill(0);
+
+            // Calculate scores
+            questions.forEach((q, idx) => {
+                let score = answers[idx];
+                if (q.reverse === -1) {
+                    score = 4 - score; // Reverse scoring
+                }
+                scores[q.trait] += score;
+            });
+
+            // Normalize to 0-100
+            scores = scores.map(s => Math.round((s / 16) * 100));
+
+            showResults();
+        }
+
+        function showResults() {
+            document.getElementById('testScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+
+            // Draw radar chart
+            drawRadarChart();
+
+            // Show trait cards
+            showTraitCards();
+
+            // Show summary
+            showSummary();
+        }
+
+        function drawRadarChart() {
+            const svg = document.getElementById('radarChart');
+            const size = 280;
+            const center = size / 2;
+            const levels = 5;
+            const maxScore = 100;
+
+            let html = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+
+            // Draw grid levels
+            for (let i = levels; i > 0; i--) {
+                const radius = (center - 30) * (i / levels);
+                const points = [];
+                for (let j = 0; j < 5; j++) {
+                    const angle = (j * 2 * Math.PI) / 5 - Math.PI / 2;
+                    const x = center + radius * Math.cos(angle);
+                    const y = center + radius * Math.sin(angle);
+                    points.push([x, y]);
+                }
+                const pathData = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ') + ' Z';
+                html += `<path d="${pathData}" fill="none" stroke="#e8e6e1" stroke-width="1"/>`;
+            }
+
+            // Draw axes
+            for (let j = 0; j < 5; j++) {
+                const angle = (j * 2 * Math.PI) / 5 - Math.PI / 2;
+                const x = center + (center - 30) * Math.cos(angle);
+                const y = center + (center - 30) * Math.sin(angle);
+                html += `<line x1="${center}" y1="${center}" x2="${x}" y2="${y}" stroke="#e8e6e1" stroke-width="1"/>`;
+            }
+
+            // Draw data polygon
+            const dataPoints = [];
+            for (let j = 0; j < 5; j++) {
+                const angle = (j * 2 * Math.PI) / 5 - Math.PI / 2;
+                const radius = ((center - 30) * scores[j]) / maxScore;
+                const x = center + radius * Math.cos(angle);
+                const y = center + radius * Math.sin(angle);
+                dataPoints.push([x, y]);
+            }
+
+            const pathData = dataPoints.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ') + ' Z';
+            html += `<path d="${pathData}" fill="#1D9E75" fill-opacity="0.2" stroke="#1D9E75" stroke-width="2"/>`;
+
+            // Draw points
+            dataPoints.forEach(p => {
+                html += `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#1D9E75" stroke="white" stroke-width="2"/>`;
+            });
+
+            // Draw labels
+            for (let j = 0; j < 5; j++) {
+                const angle = (j * 2 * Math.PI) / 5 - Math.PI / 2;
+                const labelRadius = center - 10;
+                const x = center + labelRadius * Math.cos(angle);
+                const y = center + labelRadius * Math.sin(angle);
+                html += `<text x="${x}" y="${y}" text-anchor="middle" dy="0.3em" font-size="16" fill="#1a1a1a">${traits[j].emoji}</text>`;
+            }
+
+            html += '</svg>';
+            svg.outerHTML = html;
+        }
+
+        function showTraitCards() {
+            const grid = document.getElementById('traitsGrid');
+            grid.innerHTML = '';
+
+            traits.forEach((trait, idx) => {
+                const score = scores[idx];
+                let description;
+                if (score < 40) {
+                    description = trait.lowDesc;
+                } else if (score < 60) {
+                    description = trait.mediumDesc;
+                } else {
+                    description = trait.highDesc;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'trait-card';
+                card.innerHTML = `
+                    <div class="trait-header">
+                        <span class="trait-icon">${trait.emoji}</span>
+                        <div>
+                            <div class="trait-name">${trait.name}</div>
+                            <div class="trait-score">${score}%</div>
+                        </div>
+                    </div>
+                    <div class="trait-bar">
+                        <div class="trait-bar-fill" style="width: ${score}%"></div>
+                    </div>
+                    <div class="trait-description">${description}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function showSummary() {
+            // Find top 2 traits
+            const sorted = scores.map((s, idx) => ({ score: s, idx, trait: traits[idx] }))
+                .sort((a, b) => b.score - a.score);
+
+            const top2 = sorted.slice(0, 2);
+            const trait1 = top2[0].trait;
+            const trait2 = top2[1].trait;
+
+            const summary = `Senin baskın kişilik özelliklerin <strong>${trait1.emoji} ${trait1.name}</strong> ve <strong>${trait2.emoji} ${trait2.name}</strong>. Bu özellikler, kişiliğinin en belirgin yanlarını temsil ediyor ve günlük yaşamında kararlarını ve davranışlarını şekillendiriyor.`;
+
+            document.getElementById('summaryText').innerHTML = summary;
+        }
+
+        function copyResults() {
+            const sorted = scores.map((s, idx) => ({ score: s, idx, trait: traits[idx] }))
+                .sort((a, b) => b.score - a.score);
+
+            let text = 'Kişilik Testi Sonuçlarım:\n\n';
+            sorted.forEach(item => {
+                text += `${item.trait.emoji} ${item.trait.name}: ${item.score}%\n`;
+            });
+            text += '\nhttps://iyibirhayat.com/kisilik';
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Sonuçlar kopyalandı!');
+            });
+        }
+
+        function shareWhatsApp() {
+            const sorted = scores.map((s, idx) => ({ score: s, idx, trait: traits[idx] }))
+                .sort((a, b) => b.score - a.score);
+
+            const trait1 = sorted[0].trait.emoji + ' ' + sorted[0].trait.name;
+            const trait2 = sorted[1].trait.emoji + ' ' + sorted[1].trait.name;
+
+            const text = `Kişilik testini yaptım! Baskın özelliklerim: ${trait1} ve ${trait2}. Sende dene: https://iyibirhayat.com/kisilik`;
+            const encoded = encodeURIComponent(text);
+            window.open(`https://wa.me/?text=${encoded}`, '_blank');
+        }
+
+        function shareTwitter() {
+            const sorted = scores.map((s, idx) => ({ score: s, idx, trait: traits[idx] }))
+                .sort((a, b) => b.score - a.score);
+
+            const trait1 = sorted[0].trait.emoji + ' ' + sorted[0].trait.name;
+            const trait2 = sorted[1].trait.emoji + ' ' + sorted[1].trait.name;
+
+            const text = `Kişilik testini yaptım! Baskın özelliklerim: ${trait1} ve ${trait2} 🎭 https://iyibirhayat.com/kisilik`;
+            const encoded = encodeURIComponent(text);
+            window.open(`https://twitter.com/intent/tweet?text=${encoded}`, '_blank');
+        }
+
+        function resetTest() {
+            currentQuestion = 0;
+            answers = new Array(20).fill(null);
+            scores = new Array(5).fill(0);
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
